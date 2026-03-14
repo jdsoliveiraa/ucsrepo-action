@@ -34,6 +34,13 @@ runs:
       shell: bash
       run: git config --global http.postBuffer 524288000
 
+    - name: Set up Git LFS
+      shell: bash
+      run: |
+        git lfs install
+        git lfs track "*.mp4" "*.zip" "*.rar" "*.7z" "*.tar.gz" "*.iso" "*.dmg"
+        git add .gitattributes 2>/dev/null || true
+
     - name: Run sync script
       shell: bash
       env:
@@ -43,6 +50,15 @@ runs:
         PYTHONPATH: ${{ github.action_path }}
       run: python ${{ github.action_path }}/main.py
       
+    - name: Track large files with Git LFS
+      shell: bash
+      run: |
+        find . -type f -size +95M -not -path './.git/*' | while read -r f; do
+          echo "Tracking large file with LFS: $f"
+          git lfs track "$f"
+        done
+        git add .gitattributes 2>/dev/null || true
+
     - name: Log downloaded files and git status
       shell: bash
       run: |

@@ -39,6 +39,14 @@ runs:
         PYTHONPATH: ${{ github.action_path }}
       run: python ${{ github.action_path }}/main.py
       
+    - name: Log downloaded files and git status
+      shell: bash
+      run: |
+        echo "Listing contents of download_dir:"
+        ls -la ${{ inputs.download_dir }} || true
+        echo "Current git status:"
+        git status
+      
     - name: Commit and push changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:

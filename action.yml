@@ -1,0 +1,46 @@
+name: 'UC Student Sync'
+description: 'Sync files from the UCStudent (UC) platform to your repository'
+author: 'jdsoliveira'
+inputs:
+  username:
+    description: 'UC student username (email or student number)'
+    required: true
+  password:
+    description: 'UC student password'
+    required: true
+  download_dir:
+    description: 'Directory to save files in'
+    required: false
+    default: '.'
+  commit_message:
+    description: 'Commit message for synced files'
+    required: false
+    default: 'chore: sync UC student files'
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r ${{ github.action_path }}/requirements.txt
+        
+    - name: Run sync script
+      shell: bash
+      env:
+        UC_USERNAME: ${{ inputs.username }}
+        UC_PASSWORD: ${{ inputs.password }}
+        DOWNLOAD_DIR: ${{ inputs.download_dir }}
+        PYTHONPATH: ${{ github.action_path }}
+      run: python ${{ github.action_path }}/main.py
+      
+    - name: Commit and push changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: ${{ inputs.commit_message }}
+        file_pattern: '*' # Pattern updated to capture all new folders

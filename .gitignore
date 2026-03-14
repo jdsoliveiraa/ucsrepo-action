@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+venv/
+ENV/
+
+# Academic year folders (e.g., 2025-2026) should be ignored in THIS repo 
+# but will be included in the user's repo.
+# Note: This is to keep the Action repo clean.
+[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]/
+unknown_year/

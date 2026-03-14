@@ -30,6 +30,10 @@ runs:
         python -m pip install --upgrade pip
         pip install -r ${{ github.action_path }}/requirements.txt
         
+    - name: Configure git for large pushes
+      shell: bash
+      run: git config --global http.postBuffer 524288000
+
     - name: Run sync script
       shell: bash
       env:
